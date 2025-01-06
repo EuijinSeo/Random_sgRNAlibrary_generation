@@ -15,97 +15,96 @@ B: The number of reads that target the template strand in the SAM file
 C: The number of reads in the SAM file that are not matched in the reference gene
 """
 
-# Obtain the read information from SAM file 
+# Function to extract read information from a SAM file
 def sam_mining(x):
-    xx = x.split('\t')
-    y = [xx[1],int(xx[3]),int(xx[3])+int(xx[5][:-1])-1]
-    return y # y[0]: mapping direction (0:mapping forward, 16:mapping reverse) , y[1]: start position, y[2]: end position
+    xx = x.split('\t')  # Split the SAM line into fields using tab as the delimiter
+    y = [xx[1], int(xx[3]), int(xx[3]) + int(xx[5][:-1]) - 1]  # Extract mapping direction, start, and end positions
+    return y  # y[0]: mapping direction (0 = forward, 16 = reverse), y[1]: start position, y[2]: end position
 
-# Obtain the read information from GTF file
+# Function to extract information from a GTF file
 def gtf_mining(x):
-    xx = x.split('\t')
-    y = [xx[2],int(xx[3]),int(xx[4]),xx[-3]]
-    return y # y[0]:sequence type (gene, CDS, etc.), y[1]: start position, y[2]:end position, y[3]: genome direction (+:forward, -:reverse)
+    xx = x.split('\t')  # Split the GTF line into fields using tab as the delimiter
+    y = [xx[2], int(xx[3]), int(xx[4]), xx[-3]]  # Extract feature type, start and end positions, and genome direction
+    return y  # y[0]: sequence type (e.g., gene, CDS), y[1]: start position, y[2]: end position, y[3]: genome direction (+ or -)
 
-# Check if there is an overlapping region between the coordinates of two DNA sequences (SAM, GTF)
-def in_or_not(x,y):
-    if x[1] >= y[1] and x[1] <=y[2]:
+# Function to check if two DNA regions overlap
+def in_or_not(x, y):
+    # Conditions for overlap between regions x and y
+    if x[1] >= y[1] and x[1] <= y[2]:  # x start within y region
         return True
-    elif x[2] >= y[1] and x[2] <=y[2]:
+    elif x[2] >= y[1] and x[2] <= y[2]:  # x end within y region
         return True
-    elif y[1] >= x[1] and y[2] <=x[2]:
+    elif y[1] >= x[1] and y[2] <= x[2]:  # y region completely within x region
         return True
-    elif y[2] >= x[1] and y[2] <=x[2]:
+    elif y[2] >= x[1] and y[2] <= x[2]:  # y end within x region
         return True
-    else:
+    else:  # No overlap
         return False
 
-# Open and read the SAM file
-sam = open('Path_of_alignment_1mismatch_aligned_only_sam.txt', 'r') # Replace 'Path_of_alignment_1mismatch_aligned_only_sam.txt' with your SAM file path
+# Open the SAM file
+sam = open('Path_of_alignment_1mismatch_aligned_only_sam.txt', 'r')  # Replace with your SAM file path
 
-# Remove the first three lines of unnecessary information from a SAM file before running the program 
+# Skip the first three lines of the SAM file (header information)
 for _ in range(3):
     sam.readline()
-    
-A = 0 # The number of reads that target the non-template strand in the SAM file
-B = 0 # The number of reads that target the template strand in the SAM file
-C = 0 # The number of reads in the SAM file that are not matched in the reference gene
 
-# Perform the following operations on every line of the SAM file
+# Initialize counters
+A = 0  # Number of reads targeting the non-template strand
+B = 0  # Number of reads targeting the template strand
+C = 0  # Number of reads not mapped to any reference gene
+
+# Process each read in the SAM file
 while True:
-    sam_temp = sam.readline()
+    sam_temp = sam.readline()  # Read a line from the SAM file
 
-    # Terminate the while loop when the SAM file has been read completely
+    # Exit the loop if the end of the SAM file is reached
     if sam_temp == '':
         break
-        
-    sam_seq = sam_mining(sam_temp)
 
-    # Open and read the GTF file
-    gtf = open('Path_of_gtf_file.txt', 'r') # Replace 'Path_of_gtf_file.txt' with your gtf file path
-    
-    # Remove the first three lines of unnecessary information from a gtf file before running the program  
+    sam_seq = sam_mining(sam_temp)  # Extract relevant information from the SAM line
+
+    # Open the GTF file
+    gtf = open('Path_of_gtf_file.txt', 'r')  # Replace with your GTF file path
+
+    # Skip the first three lines of the GTF file (header information)
     for _ in range(3):
         gtf.readline()
-        
-    # Perform the following operations on every line of the gtf file
-    while True:
-        get_temp = gtf.readline()
 
-        # Terminate the while loop when the gtf file has been read completely
+    # Process each entry in the GTF file
+    while True:
+        get_temp = gtf.readline()  # Read a line from the GTF file
+
+        # Exit the loop if the end of the GTF file is reached
         if get_temp == '###\n':
             break
-        else:
-            
-            gtf_seq = gtf_mining(get_temp)
-            
-            if gtf_seq[0] != 'gene':
-                continue
-                
-            else:
-                if in_or_not(gtf_seq,sam_seq):
-                    # If direction of reference gene and mapped sgRNA are '+' and '16', A:=A+1 
-                    if gtf_seq[3] == '+' and sam_seq[0] == '16':
-                        A += 1
-                    # If direction of reference gene and mapped sgRNA are '+' and '0', B:=B+1 
-                    elif gtf_seq[3] == '+' and sam_seq[0] == '0':
-                        B += 1
-                    # If direction of reference gene and mapped sgRNA are '-' and '0', A:=A+1 
-                    elif gtf_seq[3] == '-' and sam_seq[0] == '0':
-                        A += 1
-                    # If direction of reference gene and mapped sgRNA are '-' and '16', B:=B+1 #
-                    else:
-                        B += 1
-                # If sgRNA is not mapped to reference gene
-                else:
-                    C+=1 
 
-# Print result
+        gtf_seq = gtf_mining(get_temp)  # Extract relevant information from the GTF line
+
+        # Skip non-gene entries
+        if gtf_seq[0] != 'gene':
+            continue
+
+        # Check if the SAM read overlaps with the gene region
+        if in_or_not(gtf_seq, sam_seq):
+            # Classify the read based on genome direction and read direction
+            if gtf_seq[3] == '+' and sam_seq[0] == '16':  # Forward genome, reverse read
+                A += 1
+            elif gtf_seq[3] == '+' and sam_seq[0] == '0':  # Forward genome, forward read
+                B += 1
+            elif gtf_seq[3] == '-' and sam_seq[0] == '0':  # Reverse genome, forward read
+                A += 1
+            elif gtf_seq[3] == '-' and sam_seq[0] == '16':  # Reverse genome, reverse read
+                B += 1
+        else:
+            # If no overlap is found, count it as unmatched
+            C += 1
+
+# Print the results
 print(f'The number of reads that target the non-template strand in the SAM file (A): {A}')
 print(f'The number of reads that target the template strand in the SAM file (B): {B}')
-print(f'A/(A+B): {A/(A+B)}')
+print(f'A/(A+B): {A/(A+B):.2f}')  # Proportion of reads targeting the non-template strand
 print(f'The number of reads in the SAM file that are not matched in the reference gene: {C}')
 
-# Close the opened SAM file and gtf file after reading them
+# Close the SAM and GTF files
 sam.close()
 gtf.close()
