@@ -17,6 +17,7 @@ This program matches the normalized read counts of each sgRNA in control, select
 
 """
 
+# Import pandas library (Version = 2.0.3)
 import pandas as pd
 
 # Load the selected sgRNA data from an Excel file
