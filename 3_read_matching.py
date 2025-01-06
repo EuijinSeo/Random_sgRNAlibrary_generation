@@ -3,7 +3,7 @@
 
 Author : Euijin Seo (ufoooo1391@postech.ac.kr)
 
-Paper : Generation of an Ultra-dense Genome-scale Single-guide RNA Library for CRISPRi Application, Lee et al., in revision, 2025
+Paper : Direct mRNA-to-sgRNA Conversion Generates Design-Free Ultra-Dense CRISPRi Libraries for Systematic Phenotypic Screening, 2025
 
 Copyright by POSTECH Synthetic Biology Laboratory(SBL)
 
