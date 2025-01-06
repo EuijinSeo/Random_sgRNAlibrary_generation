@@ -23,6 +23,6 @@ Lee, J., Jeon, H.H., Seo, E., Park, S., Choe, D., Cho, B.-K. and Lee, J.W.\* “
 
 ---
 ## E-mail
-- 1st author : Jiseon Lee (ljs72@postech.ac.kr)\n
+- 1st author : Jiseon Lee (ljs72@postech.ac.kr)
 - Corresponding author : Jeong Wook Lee (jeongwook@postech.ac.kr)
 - Program author : Euijin Seo (ufoooo1391@postech.ac.kr)
