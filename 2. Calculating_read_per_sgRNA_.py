@@ -1,10 +1,10 @@
 """
 
-2024-x-xx
+2025-x-xx
 
 Author : Euijin Seo (ufoooo1391@postech.ac.kr)
 
-Paper : Generation of an Ultra-dense Genome-scale Single-guide RNA Library for CRISPRi Application, Lee et al., Nat. Chem. Biol., 2024
+Paper : Generation of an Ultra-dense Genome-scale Single-guide RNA Library for CRISPRi Application, Lee et al., in revision, 2025
 
 Copyright by POSTECH Synthetic Biology Laboratory(SBL)
 
