@@ -4,7 +4,7 @@
 
 Author : Euijin Seo (ufoooo1391@postech.ac.kr)
 
-Paper : Generation of an Ultra-dense Genome-scale Single-guide RNA Library for CRISPRi Application, Lee et al., Nat. Chem. Biol., 2024
+Paper : Generation of an Ultra-dense Genome-scale Single-guide RNA Library for CRISPRi Application, Lee et al., in revision, 2025
 
 Copyright by POSTECH Synthetic Biology Laboratory(SBL)
 
@@ -21,7 +21,7 @@ def sam_mining(x):
     y = [xx[1],int(xx[3]),int(xx[3])+int(xx[5][:-1])-1]
     return y
 
-def gtf_mining(x):
+def gcf_mining(x):
     xx = x.split('\t')
     y = [xx[2],int(xx[3]),int(xx[4]),xx[-3]]
     return y
@@ -64,24 +64,24 @@ while True:
     if sam_temp == '':
         break
     sam_seq = sam_mining(sam_temp)
-    gtf = open('Path_of_GCF_file.txt', 'r') # Replace 'Path_of_GCF_file.txt' with your GCF file path
+    gcf = open('Path_of_GCF_file.txt', 'r') # Replace 'Path_of_GCF_file.txt' with your GCF file path
     for _ in range(3):
-        gtf.readline()
+        gcf.readline()
     while True:
-        get_temp = gtf.readline()
+        get_temp = gcf.readline()
         if get_temp == '###\n':
             break
         else:
-            gtf_seq = gtf_mining(get_temp)
-            if gtf_seq[0] != 'gene':
+            gcf_seq = gcf_mining(get_temp)
+            if gcf_seq[0] != 'gene':
                 continue
             else:
-                if in_or_not(gtf_seq,sam_seq):
-                    if gtf_seq[3] == '+' and sam_seq[0] == '16':
+                if in_or_not(gcf_seq,sam_seq):
+                    if gcf_seq[3] == '+' and sam_seq[0] == '16':
                         A += 1
-                    elif gtf_seq[3] == '+' and sam_seq[0] == '0':
+                    elif gcf_seq[3] == '+' and sam_seq[0] == '0':
                         B += 1
-                    elif gtf_seq[3] == '-' and sam_seq[0] == '0':
+                    elif gcf_seq[3] == '-' and sam_seq[0] == '0':
                         A += 1
                     else:
                         B += 1
@@ -91,4 +91,4 @@ while True:
 print(A,B,A/(A+B),C)
 
 sam.close()
-gtf.close()
+gcf.close()
