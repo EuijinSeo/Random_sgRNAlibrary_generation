@@ -29,7 +29,7 @@ def sam_mining(x):
   else:
       return 'data empty'
 
-def gca_mining(x):
+def gcf_mining(x):
   xx = x.split('\t')
   y = [xx[2],int(xx[3]),int(xx[4]),xx[-1].split('"')[1]]
   return y
@@ -50,18 +50,18 @@ while True:
         if sam_temp == 'data empty':
             continue
         result_len = len(result)
-        gca = open('Path_of_GCF_file_of_reference_genome.txt','r') # Replace 'Path_of_GCF_file_of_reference_genome.txt' with your GCF file path
+        gcf = open('Path_of_GCF_file_of_reference_genome.txt','r') # Replace 'Path_of_GCF_file_of_reference_genome.txt' with your GCF file path
         for _ in range(3):
-            gca.readline()
+            gcf.readline()
         while True:
-            gca_line = gca.readline()
-            if gca_line =='###\n':
+            gcf_line = gcf.readline()
+            if gcf_line =='###\n':
                 break
             else:
-                gca_temp = gca_mining(gca_line)
-                if gca_temp[0] == 'gene':
-                    if in_or_not(gca_temp[1],gca_temp[2],sam_temp[1],sam_temp[2]):
-                        result.append([sam_temp[3],sam_temp[0],gca_temp[-1]])
+                gcf_temp = gcf_mining(gcf_line)
+                if gcf_temp[0] == 'gene':
+                    if in_or_not(gcf_temp[1],gcf_temp[2],sam_temp[1],sam_temp[2]):
+                        result.append([sam_temp[3],sam_temp[0],gcf_temp[-1]])
                         break
         if len(result) == result_len:
             result.append([sam_temp[3],sam_temp[0],'-'])
@@ -82,5 +82,5 @@ name_list = ['Sequence','Read counts','gene']
 df = pd.DataFrame({name_list[0]:seq_list, name_list[1]:cnt_list, name_list[2]:gene_list})
 df.to_excel('reads_per_sgRNA_dCas9_220506_1m.xlsx') # Put your desired output file directory
 
-gca.close()
+gcf.close()
 sam.close()
