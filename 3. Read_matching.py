@@ -19,40 +19,54 @@ This program matches the normalized read counts of each sgRNA in control, select
 
 import pandas as pd
 
-sel_data = pd.read_excel('Path_to_selected_sgRNA_file.xlsx') # Replace 'Path_to_selected_sgRNA_file.xlsx' with your selected sgRNA file path
-ctrl_data = pd.read_excel('Path_to_control_sgRNA_file.xlsx') # Replace 'Path_to_control_sgRNA_file.xlsx' with your control sgRNA file path
+# Load the selected sgRNA data from an Excel file
+sel_data = pd.read_excel('Path_to_selected_sgRNA_file.xlsx')  # Replace with the path to your selected sgRNA file
 
-seqsel = sel_data['Sequence'].tolist()
-seqctrl = ctrl_data['Sequence'].tolist()
-nsel = sel_data['Normalized read counts'].tolist()
-nctrl = ctrl_data['Normalized read counts'].tolist()
-gensel = sel_data['gene'].tolist()
-genctrl = ctrl_data['gene'].tolist()
+# Load the control sgRNA data from an Excel file
+ctrl_data = pd.read_excel('Path_to_control_sgRNA_file.xlsx')  # Replace with the path to your control sgRNA file
 
-seqlist = []
-nsellist = []
-nctrllist = []
-genlist = []
+# Extract relevant columns from the selected sgRNA data
+seqsel = sel_data['Sequence'].tolist()  # List of sgRNA sequences in the selection condition
+nsel = sel_data['Normalized read counts'].tolist()  # List of normalized read counts in the selection condition
+gensel = sel_data['gene'].tolist()  # List of genes associated with sgRNAs in the selection condition
 
+# Extract relevant columns from the control sgRNA data
+seqctrl = ctrl_data['Sequence'].tolist()  # List of sgRNA sequences in the control condition
+nctrl = ctrl_data['Normalized read counts'].tolist()  # List of normalized read counts in the control condition
+genctrl = ctrl_data['gene'].tolist()  # List of genes associated with sgRNAs in the control condition
+
+# Initialize lists to store results
+seqlist = []    # Combined list of sequences
+nsellist = []   # Combined list of normalized reads in the selection condition
+nctrllist = []  # Combined list of normalized reads in the control condition
+genlist = []    # Combined list of gene names
+
+# Compare sgRNA sequences between selected and control conditions
 for i in range(len(seqsel)):
-    original_seq = len(seqctrl)
+    original_seq = len(seqctrl)  # Track the original number of control sequences
     for j in range(len(seqctrl)):
+        # If the sequence from the selection condition matches a sequence in the control condition
         if seqsel[i] == seqctrl[j]:
+            # Append matching data to the result lists
             seqlist.append(seqsel[i])
             nsellist.append(nsel[i])
             nctrllist.append(nctrl[j])
             genlist.append(gensel[i])
+            
+            # Remove the matched sequence and corresponding data from the control lists
             seqctrl.remove(seqctrl[j])
             nctrl.remove(nctrl[j])
             genctrl.remove(genctrl[j])
             break
 
+    # If no match was found, append the selection sequence with a default control value
     if len(seqctrl) == original_seq:
         seqlist.append(seqsel[i])
         nsellist.append(nsel[i])
-        nctrllist.append(1)
+        nctrllist.append(1)  # Default value for unmatched sequences in the control condition
         genlist.append(gensel[i])
 
+# Reset the lists for another pass to account for unmatched control sequences
 seqsel = sel_data['Sequence'].tolist()
 seqctrl = ctrl_data['Sequence'].tolist()
 nsel = sel_data['Normalized read counts'].tolist()
@@ -60,19 +74,27 @@ nctrl = ctrl_data['Normalized read counts'].tolist()
 gensel = sel_data['gene'].tolist()
 genctrl = ctrl_data['gene'].tolist()
 
+# Check for unmatched control sequences
 for i in range(len(seqctrl)):
-    original_seq = len(seqsel)
-    tf = 0
+    original_seq = len(seqsel)  # Track the original number of selection sequences
+    tf = 0  # Flag to track whether a match is found
     for j in range(len(seqsel)):
         if seqctrl[i] == seqsel[j]:
-            tf = 1
+            tf = 1  # Match found
             break
-    if tf == 0:
+    if tf == 0:  # If no match is found
         seqlist.append(seqctrl[i])
-        nsellist.append(1)
+        nsellist.append(1)  # Default value for unmatched sequences in the selection condition
         nctrllist.append(nctrl[i])
         genlist.append(genctrl[i])
 
-result = pd.DataFrame({'Sequence':seqlist, 'Normalized reads in control condition':nctrllist, 'Normalized reads in selection condition':nsellist,'Gene':genlist})
+# Create a DataFrame to store the combined results
+result = pd.DataFrame({
+    'Sequence': seqlist,
+    'Normalized reads in control condition': nctrllist,
+    'Normalized reads in selection condition': nsellist,
+    'Gene': genlist
+})
 
-result.to_excel('output.xlsx') # Put your desired output file directory
+# Save the results to an Excel file
+result.to_excel('output.xlsx')  # Replace with your desired output file path
