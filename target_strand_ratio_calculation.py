@@ -79,22 +79,31 @@ while True:
         if get_temp == '###\n':
             break
         else:
+            
             gcf_seq = gcf_mining(get_temp)
+            
             if gcf_seq[0] != 'gene':
                 continue
+                
             else:
                 if in_or_not(gcf_seq,sam_seq):
+                    #
                     if gcf_seq[3] == '+' and sam_seq[0] == '16':
                         A += 1
+                    #
                     elif gcf_seq[3] == '+' and sam_seq[0] == '0':
                         B += 1
+                    #
                     elif gcf_seq[3] == '-' and sam_seq[0] == '0':
                         A += 1
+                    #
                     else:
                         B += 1
+                #
                 else:
                     C+=1 
 
+#
 print(A,B,A/(A+B),C)
 
 # Close the opened SAM file and GCF file after reading them
