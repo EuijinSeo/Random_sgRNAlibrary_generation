@@ -3,8 +3,15 @@ In our study, 'Generation of an Ultra-dense Genome-scale Single-guide RNA Librar
 
 ![Figure 1_2](https://github.com/EuijinSeo/Random_sgRNAlibrary_generation/assets/97028331/e9f3c8a1-931f-4321-b6a0-31a2f9bd6f50)
 
+## Table of contents
+- Target Strand Ratio Calculation (target_strand_ratio_caculation.py)
+  - asdf
+- Pandas = 2.0.3
+
+
 ## Prerequisites
-- Python >= 3.6.0
+- Python = 3.6.0
+- Pandas = 2.0.3
 
 ## Citation
 Lee, J., Jeon, H.H., Seo, E., Park, S., Choe, D., Cho, B.-K. and Lee, J.W.\* “Generation of an Ultra-dense Genome-scale Single-guide RNA Library for CRISPRi Application”, (submitted).
@@ -12,3 +19,4 @@ Lee, J., Jeon, H.H., Seo, E., Park, S., Choe, D., Cho, B.-K. and Lee, J.W.\* “
 ## E-mail
 - 1st author : Jiseon Lee (ljs72@postech.ac.kr)\n
 - Corresponding author : Jeong Wook Lee (jeongwook@postech.ac.kr)
+- Program author : Euijin Seo (ufoooo1391@postech.ac.kr)
