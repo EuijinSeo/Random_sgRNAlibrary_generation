@@ -1,5 +1,4 @@
 """
-
 2025-x-xx
 
 Author : Euijin Seo (ufoooo1391@postech.ac.kr)
@@ -13,8 +12,6 @@ Normalized read count: (Read counts/Total read counts)*10^6+1
 Output: sgRNA sequence/Normalized sgRNA reads in control condition/Normalized sgRNA reads in selection condition/sgRNA-aligend gene name  (format:excel)
 
 This program matches the normalized read counts of each sgRNA in control, selection condition, enabling the calculation of the fold change of the abundance of each sgRNA.
-
-
 """
 
 # Import pandas library (Version = 2.0.3)
